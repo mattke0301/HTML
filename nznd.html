@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	  	<title id="title">NZND專區</title>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- 利用Tabletop.JS讀取Google Sheet https://github.com/jsoma/tabletop -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+		<script type='text/javascript'>
+
+			var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU/pubhtml';
+			var x = 0, time = setInterval(function(){ change();}, 3000);
+
+			function init() {
+				Tabletop.init( { key: publicSpreadsheetUrl,
+							 callback: showInfo,
+							 simpleSheet: true } )
+			}
+
+			function showInfo(data, tabletop) {
+				console.log(data);
+				var str = "";
+				for (var i = 0; i < data.length; i++) {
+					if (data[i].NZND == "yes") {
+						str += 	'	<div class="col s12 m3">' +
+								'      <div class="card">' +
+								'        <div class="card-image">' +
+								'          <img src="' + data[i].img + '">' +
+								'        </div>' +
+								'        <div class="card-content">'+
+								'          <div class="card-title">' + data[i].Name + '</div>' +
+								'			<p>播出時間：' + data[i].Time + '</p>' +
+								'			<pre><p>案件死者<br>&#9' + data[i].Victim + '</p></pre>' +
+								'          <p>來賓<br>';
+						var arr_guest = data[i].Guest.split("、");
+						console.log(arr_guest);
+						for (var j = 0; j < arr_guest.length; j++) {
+							if (j != 0)		str+= '、';
+							str += '<a href="https://zh.wikipedia.org/wiki/' + arr_guest[j] + '" target="blank">' + arr_guest[j] + '</a>';
+						}
+								
+						str +=	'			</p>' +
+								'        </div>' +
+								'        <div class="card-action">';
+								
+						var arr_video = data[i].Video.split("、");
+						console.log(arr_video);
+						for (var j = 0; j < arr_video.length; j++) {
+							var num = j + 1;
+							if (arr_video.length == 1){
+								if (arr_video[j] == "無")	str += '<a href="#!">無影片</a>';
+								else	str +=  '<a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+												'target="blank">完整版</a>';
+								break;
+							}
+							else if (arr_video[j] == "無")	break;
+							str += 	'          <a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+									'target="blank">part' + num + '</a>';
+						}
+						if (data[i].Crime == "無")	str += '<a href="#!" class="right">無案件還原</a>';
+						else {
+							str += 	'			<a href="https://www.youtube.com/watch?v='+ data[i].Crime + '&t=' + data[i].Crime_time + 's" ' +
+									'class="right" target="blank">案件還原</a>';
+						}
+						str +=	'        </div>' +
+								'      </div>' +
+								'    </div>';
+					}
+					
+				}
+				document.getElementById("info").innerHTML += str;
+			}
+
+			window.addEventListener('DOMContentLoaded', init);
+
+			function change() {
+				x = (3 + x + 1) % 3;
+				console.log(x);
+				document.getElementById("photo").innerHTML = '<img src="./images/' + x + '.jpg" style="height: 600px">'
+			}
+
+
+		</script>
+	<head>
+
+	<body class="light-blue lighten-4">
+		<ul id="sidenav_content" class="sidenav collapsible">
+			<li>
+				<div class="user-view">
+			      	<div class="background">
+			        	<img src="https://upload.cc/i1/2020/01/03/y5f3wn.jpg">
+			      	</div>
+			      	<img class="circle" src="https://upload.cc/i1/2020/01/03/6dADVq.jpg">
+      				<span class="black-text name"><b>明星大偵探</b></span>
+			  	</div>
+			</li>
+			<li>
+				<a href="home.html"><i class="material-icons">home</i>首頁</a>
+			</li>
+			<li>
+				<a href="info.html"><i class="material-icons">info</i>節目資訊</a>
+			</li>
+      		<li id="NZND">
+      			<a href="nznd.html"><i class="material-icons">star</i>NZND專區</a>
+      		</li>
+      		<li class="divider"></li>
+			<li id="season">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>季數</div>
+	  			<div class="collapsible-body">
+	  				<span>
+	  					<ul>
+						  <li><a href="season.html?i=1">第一季</a></li>
+						  <li><a href="season.html?i=2">第二季</a></li>
+						  <li><a href="season.html?i=3">第三季</a></li>
+						  <li><a href="season.html?i=4">第四季</a></li>
+						</ul>
+	  				</span>
+	  			</div>
+      		</li>
+			<li class="divider"></li>
+      		<li id="mc">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>主持人</div>
+      			<div class="collapsible-body">
+      				<span>
+      					<ul>
+						  <li>
+						  	<a href="mc.html?i=0&sheet=1FAIpQLSfNQwaT0ggrTYNI0D6Ed1Oo4TaxF02gAobzZUHziUeGjadvjw&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1FvKE87C2yTEpyZv43WXX67JVAJ-1qTK-uzuTt0W3Zg0">何炅</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=1&sheet=1FAIpQLSd-LjtIwlq27oxfhwSvSygSRaEpsGmLKw3O74xOEgICYXDiKQ&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1zjaOuCtrK9QSCXFfqm_6ZmSxWYoHSuNUhId83UlG804">撒貝寧</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=2&sheet=1FAIpQLSeiiJG3wCJh4trO54pJaaNPu-fzu75X21fE3_lOPUa5lrASFw&url=1UWYrMDxSIu6xSqQ6ZiebucFk42VAuaLKO86lTh7dhhM&url_s=1AVf1WU4QTltPref32HwMUO8FKnT61UmJzKVZxRh0pA8">白敬亭</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=3&sheet=1FAIpQLScQIcoI068ee_eveiNxXfW72MHy8i5pL0OBUoMwqBfF6kbMbQ&url=1cScAM2bVIuU8e7cFtXq-NvHomDSXGT0glwaXNZbGz18&url_s=14jcJNgSHekDvm1ykOPidy8qG08uL1rFhk0YnGoPBNaY">鬼鬼</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=4&sheet=1FAIpQLSdV2ZRlnJ1klkCjGMWfraWRhBhsm5-K36BT-G4fl1AZQRrT0A&url=1OFH3zOoDkNmXq0KGqWMNtXVgI_OE4HpHbX7E9IhgtZ4&url_s=1TA0aDRQ_NJWPq3BF9JSQpEVv8CWUX-C58vOuwVAzEHs">王鷗</a>
+						  </li>
+						</ul>
+      				</span>
+      			</div>
+      		</li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper blue lighten-3">
+				<a class="brand-logo center">NZND專區</a>
+			  	<!--Menu-->
+			  	<ul id="nav-mobile" class="left">
+				  	<li>
+				  		<a data-target="sidenav_content" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+				  	</li>
+			  	</ul>
+				<!--Home-->
+			  	<ul id="nav-mobile" class="right">
+			  		<li>
+						<a href="info.html" class="show-on-large"><i class="material-icons">info</i></a>
+			  		</li>
+			  		<li>
+						<a href="home.html" class="show-on-large"><i class="material-icons">home</i></a>
+			  		</li>
+			  	</ul>
+			</div>
+		</nav>
+
+		<div class="section row" id="member">
+			<div class="container">
+				<h3 class="center">人物介紹</h3>
+				<div class="col s12 m8 l6">
+					<h5>現任成員</h5>
+					<pre><p>&#9何美男 (<a href="https://zh.wikipedia.org/wiki/何炅">何炅</a>)<br>&#9&#9妹妹曾女扮男裝扮演哥哥，白Rap的粉絲</p>
+					<p>&#9撒微笑 (<a href="https://zh.wikipedia.org/wiki/撒貝寧">撒貝寧</a>)<br>&#9&#9喜歡何美女(何美男的妹妹)</p>
+					<p>&#9白Rap (<a href="https://zh.wikipedia.org/wiki/白敬亭">白敬亭</a>)<br>&#9&#9本團隊最紅，本團C位</p></pre>
+					<h5>已退出成員</h5>
+					<pre><p>&#9大主唱 (<a href="https://zh.wikipedia.org/wiki/大張偉">大張偉</a>)<br>&#9&#9因被爆出整形，因此退出團體，單飛出道</p>
+					<p>&#9陳舞蹈 (<a href="https://zh.wikipedia.org/wiki/陳若軒">陳若軒</a>)<br>&#9&#9因犯下錯誤，因此退出團體</p></pre>
+					<h5>練習生</h5>
+					<pre><p>&#9魏全能 (<a href="https://zh.wikipedia.org/wiki/魏大勛">魏大勛</a>)<br>&#9&#9因年紀最大，希望弟弟們能順利出道</p>
+					<p>&#9賈跳舞 (<a href="https://zh.wikipedia.org/wiki/黃明昊">黃明昊</a>)<br>&#9&#9練習生中最會跳舞</p></pre>
+				</div>
+				<div class="col s12 m4 l6 center" id="photo">
+					<img src="./images/0.jpg" style="height: 600px">					
+				</div>
+			</div>
+		</div>
+		<div class="divider"></div>
+		<div class="section row" id="info">
+			<h3 class="center">相關案件</h3>
+		</div>
+
+		<div class="fixed-action-btn">
+		  <a class="btn-floating btn-large blue">
+		    <i class="large material-icons">more_vert</i>
+		  </a>
+		  <ul>
+		    <li><a class="btn-floating red" href="#member"><i class="material-icons">people</i></a></li>
+		    <li><a class="btn-floating yellow darken-1" href="#info"><i class="material-icons">ondemand_video</i></a></li>
+		  </ul>
+		</div>
+
+		
+
+		<footer class="page-footer blue darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">聯絡我們</h5>
+           		<div class="row">
+                  	<a href="https://www.facebook.com/pages/category/TV-Show/%E6%98%8E%E6%98%9F%E5%A4%A7%E4%BE%A6%E6%8E%A2-841912759286528/" class="white-text col s12 m6" target="blank"><i class="fa fa-facebook-square" style="font-size: 48px;"></i>  facebook</a>
+                  	<a class="white-text col s12 m6" href="https://www.weibo.com/u/5862147128?is_hot=1" target="blank"><i class="fa fa-weibo" style="font-size:48px; color: red;"></i>  weibo</a>
+                 </div>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">相關連結 <i class="fa fa-wikipedia-w" style="font-size: 24px;"></i></h5>
+                <ul>
+                  <li id="season_list"></li>
+                  <li>
+                  	<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/%E6%98%8E%E6%98%9F%E5%A4%A7%E5%81%B5%E6%8E%A2" target="blank">明星大偵探</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+	        <div class="container">
+	        © 2019 All rights reserved.
+	        </div>
+	      </div>
+        </footer>
+
+        <script type="text/javascript">
+			$(document).ready(function(){
+				$('.sidenav').sidenav();
+				$('.collapsible').collapsible();
+				$('.fixed-action-btn').floatingActionButton();
+			});
+        </script>
+	</body>
+</html>

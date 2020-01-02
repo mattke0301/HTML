@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+		<title id="title"></title>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- 利用Tabletop.JS讀取Google Sheet https://github.com/jsoma/tabletop -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<script type='text/javascript'>
+			function GetUrlVar(VarName) 
+			{
+			  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			  var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+			  var regex = new RegExp(regexS);
+			  var results = regex.exec(window.location.href);
+			  if (results == null)
+			   	 return "";
+			  else
+				 return results[1];
+			}
+			var index = decodeURIComponent(GetUrlVar('i'));
+			var sheet = decodeURIComponent(GetUrlVar('sheet'));
+			var url = decodeURIComponent(GetUrlVar('url'));
+			var url_s = decodeURIComponent(GetUrlVar('url_s'));
+			var time = setInterval(function(){ change(1);}, 3000);
+			var num = 0;
+
+			var array = ["何炅", "撒貝寧", "白敬亭", "鬼鬼", "王鷗"];
+			var fb = ["https://zh-tw.facebook.com/lovehejiong",
+					  "https://www.facebook.com/sa0323/", 
+					  "https://zh-tw.facebook.com/pages/category/Actor/%E7%99%BD%E6%95%AC%E4%BA%AD-1208161569202690/", 
+					  "https://zh-tw.facebook.com/gemma811/", 
+					  "https://zh-tw.facebook.com/people/%E7%8E%8B%E9%B7%97/100021891943976"];
+			var weibo = ["https://www.weibo.com/hejiong?is_hot=1", "https://www.weibo.com/sabeining?is_all=1", "https://www.weibo.com/u/2112496475?is_hot=1", "https://www.weibo.com/gguuii?is_hot=1", "https://www.weibo.com/wangou?is_hot=1"];
+			document.getElementById("title").innerHTML = array[index];
+			
+			var publicSpreadsheetUrl1 = 'https://docs.google.com/spreadsheets/d/' + url + '/pubhtml';
+			var publicSpreadsheetUrl2 = 'https://docs.google.com/spreadsheets/d/' + url_s + '/pubhtml';
+
+			function init() {
+				Tabletop.init( { key: publicSpreadsheetUrl1,
+							 callback: showSeason,
+							 simpleSheet: true } )
+				Tabletop.init( { key: publicSpreadsheetUrl2,
+							 callback: showChat,
+							 simpleSheet: true } )
+			}
+
+			function showSeason(data, tabletop) {
+				console.log(data);
+				for (var i = 0; i < data.length; i++) {
+					var str = '<tr><td>' + data[i].Season + '</td><td>' + data[i].Name + '</td><td>'
+					var arr_video = data[i].Video.split("、");
+					console.log(arr_video);
+					for (var j = 0; j < arr_video.length; j++) {
+						var num = j + 1;
+						if (arr_video.length == 1){
+
+							if (arr_video[j] == "無")	str += '<a href="#!">無影片</a>';
+							else	str +=  '<a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+											'target="blank">完整版</a>';
+							break;
+						}
+						else if (arr_video[j] == "無")		break;
+						if (j != 0)		str += "、";
+						str += 	'<a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+								'target="blank">part' + num + '</a>';
+					}
+					str += "、";
+					if (data[i].Crime == "無")	str += '<a href="#!">無案件還原</a>';
+					else {
+						str += 	'<a href="https://www.youtube.com/watch?v='+ data[i].Crime + '&t=' + data[i].Crime_time + 's"  target="blank">案件還原</a>';
+					}
+					str += "</td><td>";
+					var arr_guest = data[i].Guest.split("、");
+					console.log(arr_guest);
+					if (index == 0) {
+						for (var j = 1; j < arr_guest.length; j++) {
+							if (j != 1)		str += '、';
+							str += '<a href="https://zh.wikipedia.org/wiki/' + arr_guest[j] + '" target="blank">' + arr_guest[j] + '</a>';
+						}
+					}
+					else {
+						for (var j = 0; j < arr_guest.length; j++) {
+							if (j != 0 && arr_guest[j] != array[index])		str += '、';
+							if (arr_guest[j] != array[index])
+								str += '<a href="https://zh.wikipedia.org/wiki/' + arr_guest[j] + '" target="blank">' + arr_guest[j] + '</a>';
+						}
+					}
+					str += "</td></tr>";
+					document.getElementById("show").innerHTML += str;
+				}
+			}
+
+			function showChat(data, tabletop) {
+				console.log(data);
+				for (var i = data.length - 1, t = 0; i >= 0 && t < 10; i--, t++){
+					document.getElementById("board").innerHTML += '<p class="white-text">' + data[i].Something + '</p>';
+				}
+			}
+
+			function change(x) {
+				console.log(x);
+				num = (5 + num + x) % 5;
+				document.getElementById("photo").innerHTML = '<img src="./images/' + array[index] + '/' + num + '.jpg" style="width: 100%">';
+			}
+
+			function getText() {
+				var text = document.getElementById("something").value;
+				console.log(text);
+				var inner = '<div class="modal-content">'+
+						    '  	<div class="row">' +
+							'       <div class="input-field col s12">' +
+							'          <input id="something" type="text" class="validate">' +
+							'          <label for="something">我有話想說...</label>' +
+							'        </div>' +
+							'        <div class="col s12 center">' +
+							'          <button class="waves-effect waves-light btn" onclick="getText()">Submit' +
+							'         		<i class="material-icons">send</i>' +
+							'          </button>' +
+							'        </div>' +
+							'    </div>' +
+						    '</div>';
+				var submit = "https://docs.google.com/forms/d/e/" + sheet + "/formResponse?entry.1369741802=" + text;
+				$('.modal').modal('close');
+				$("#say").html(unescape("%3Cscript type='text/javascript' src='" + submit + "'%3E%3C/script%3E"));
+				$("#say").html(inner);
+			}
+
+			window.addEventListener('DOMContentLoaded', init);
+		</script>
+	<head>
+
+	<body class="light-blue lighten-4">
+		<ul id="sidenav_content" class="sidenav collapsible">
+			<li>
+				<div class="user-view">
+			      	<div class="background">
+			        	<img src="https://upload.cc/i1/2020/01/03/y5f3wn.jpg">
+			      	</div>
+			      	<img class="circle" src="https://upload.cc/i1/2020/01/03/6dADVq.jpg">
+      				<span class="black-text name"><b>明星大偵探</b></span>
+			  	</div>
+			</li>
+			<li>
+				<a href="home.html"><i class="material-icons">home</i>首頁</a>
+			</li>
+			<li>
+				<a href="info.html"><i class="material-icons">info</i>節目資訊</a>
+			</li>
+      		<li id="NZND">
+      			<a href="nznd.html"><i class="material-icons">star</i>NZND專區</a>
+      		</li>
+      		<li class="divider"></li>
+			<li id="season">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>季數</div>
+	  			<div class="collapsible-body">
+	  				<span>
+	  					<ul>
+						  <li><a href="season.html?i=1">第一季</a></li>
+						  <li><a href="season.html?i=2">第二季</a></li>
+						  <li><a href="season.html?i=3">第三季</a></li>
+						  <li><a href="season.html?i=4">第四季</a></li>
+						</ul>
+	  				</span>
+	  			</div>
+      		</li>
+			<li class="divider"></li>
+      		<li id="mc">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>主持人</div>
+      			<div class="collapsible-body">
+      				<span>
+      					<ul>
+						  <li>
+						  	<a href="mc.html?i=0&sheet=1FAIpQLSfNQwaT0ggrTYNI0D6Ed1Oo4TaxF02gAobzZUHziUeGjadvjw&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1FvKE87C2yTEpyZv43WXX67JVAJ-1qTK-uzuTt0W3Zg0">何炅</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=1&sheet=1FAIpQLSd-LjtIwlq27oxfhwSvSygSRaEpsGmLKw3O74xOEgICYXDiKQ&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1zjaOuCtrK9QSCXFfqm_6ZmSxWYoHSuNUhId83UlG804">撒貝寧</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=2&sheet=1FAIpQLSeiiJG3wCJh4trO54pJaaNPu-fzu75X21fE3_lOPUa5lrASFw&url=1UWYrMDxSIu6xSqQ6ZiebucFk42VAuaLKO86lTh7dhhM&url_s=1AVf1WU4QTltPref32HwMUO8FKnT61UmJzKVZxRh0pA8">白敬亭</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=3&sheet=1FAIpQLScQIcoI068ee_eveiNxXfW72MHy8i5pL0OBUoMwqBfF6kbMbQ&url=1cScAM2bVIuU8e7cFtXq-NvHomDSXGT0glwaXNZbGz18&url_s=14jcJNgSHekDvm1ykOPidy8qG08uL1rFhk0YnGoPBNaY">鬼鬼</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=4&sheet=1FAIpQLSdV2ZRlnJ1klkCjGMWfraWRhBhsm5-K36BT-G4fl1AZQRrT0A&url=1OFH3zOoDkNmXq0KGqWMNtXVgI_OE4HpHbX7E9IhgtZ4&url_s=1TA0aDRQ_NJWPq3BF9JSQpEVv8CWUX-C58vOuwVAzEHs">王鷗</a>
+						  </li>
+						</ul>
+      				</span>
+      			</div>
+      		</li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper blue lighten-3" id="logo">
+			  	<!--Menu-->
+			  	<ul id="nav-mobile" class="left">
+				  	<li>
+				  		<a data-target="sidenav_content" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+				  	</li>
+			  	</ul>
+				<!--Home-->
+			  	<ul id="nav-mobile" class="right">
+			  		<li id="chat"></li>
+			  		<li>
+						<a href="home.html" class="show-on-large"><i class="material-icons">home</i></a>
+			  		</li>
+			  	</ul>
+			</div>
+		</nav>
+
+		<div id="say" class="modal center">
+		    <div class="modal-content">
+		      	<div class="row">
+			        <div class="input-field col s12">
+			          <input id="something" type="text" class="validate">
+			          <label for="something">我有話想說...</label>
+			        </div>
+			        <div class="col s12 center">
+			          <button class="waves-effect waves-light btn" onclick="getText()">Submit
+			         		<i class="material-icons right">send</i>
+			          </button>
+			        </div>
+			    </div>
+		    </div>
+	  	</div>
+
+		<div class="row">
+			<div class="col s4 center">
+				<div id="photo"></div>
+				<div class="row">
+					<div class="col s6">
+						<button class="waves-effect waves-light btn" onclick="change(-1)"><i class="material-icons">navigate_before</i></button>
+					</div>
+					<div class="col s6">
+						<button class="waves-effect waves-light btn" onclick="change(1)"><i class="material-icons">navigate_next</i></button>
+					</div>
+				</div>
+				<div style="background:url('https://upload.cc/i1/2020/01/03/rq25Cw.jpg') no-repeat; width:100%; height: 500px" id="board"><h5 class="white-text">給我的話</h5></div>
+			</div>
+			<div class="col s8">
+				<table>
+	  				<thead>
+	  					<tr>
+	  						<th>季數</th>
+	  						<th>案件</th>
+	  						<th>影片</th>
+	  						<th>來賓</th>
+	  					</tr>
+	  				</thead>
+	  				<tbody  id="show"></tbody>
+  				</table>
+			</div>
+		</div>
+
+		<footer class="page-footer blue darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">聯絡我</h5>
+           		<div class="row" id="contact">
+                 </div>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">相關連結 <i class="fa fa-wikipedia-w" style="font-size: 24px;"></i></h5>
+                <ul>
+                  <li id="mc_list"></li>
+                  <li>
+                  	<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/%E6%98%8E%E6%98%9F%E5%A4%A7%E5%81%B5%E6%8E%A2" target="blank">明星大偵探</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+	        <div class="container">
+	        © 2019 All rights reserved.
+	        </div>
+	      </div>
+        </footer>
+
+        <script type="text/javascript">
+			$(document).ready(function(){
+				$('.sidenav').sidenav();
+				$('.collapsible').collapsible();
+				$('.modal').modal();
+			});
+			document.getElementById("logo").innerHTML += '<a class="brand-logo center">' + array[index] + '</a>';
+			document.getElementById("chat").innerHTML = '<a href="#say" class="show-on-large modal-trigger"><i class="material-icons">chat</i></a>'
+        	document.getElementById("mc_list").innerHTML = '<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/' + array[index] + '" target="blank">' + array[index] + '</a>';
+        	document.getElementById("photo").innerHTML = '<img src="./images/' + array[index] + '/' + num + '.jpg" style="width: 100%">';
+        	document.getElementById("contact").innerHTML = '<a href="' + fb[index] + '" class="white-text col s12 m6" target="blank"><i class="fa fa-facebook-square" style="font-size: 48px;"></i>  facebook</a>' +
+                '<a class="white-text col s12 m6" href="' + weibo[index] + '" target="blank"><i class="fa fa-weibo" style="font-size: 48px; color: red;"></i>  weibo</a>'
+        </script>
+	</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	  	<title id="title">節目資訊</title>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- 利用Tabletop.JS讀取Google Sheet https://github.com/jsoma/tabletop -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<head>
+
+	<body class="light-blue lighten-4">
+		<ul id="sidenav_content" class="sidenav collapsible">
+			<li>
+				<div class="user-view">
+			      	<div class="background">
+			        	<img src="https://upload.cc/i1/2020/01/03/y5f3wn.jpg">
+			      	</div>
+			      	<img class="circle" src="https://upload.cc/i1/2020/01/03/6dADVq.jpg">
+      				<span class="black-text name"><b>明星大偵探</b></span>
+			  	</div>
+			</li>
+			<li>
+				<a href="home.html"><i class="material-icons">home</i>首頁</a>
+			</li>
+			<li>
+				<a href="info.html"><i class="material-icons">info</i>節目資訊</a>
+			</li>
+      		<li id="NZND">
+      			<a href="nznd.html"><i class="material-icons">star</i>NZND專區</a>
+      		</li>
+      		<li class="divider"></li>
+			<li id="season">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>季數</div>
+	  			<div class="collapsible-body">
+	  				<span>
+	  					<ul>
+						  <li><a href="season.html?i=1">第一季</a></li>
+						  <li><a href="season.html?i=2">第二季</a></li>
+						  <li><a href="season.html?i=3">第三季</a></li>
+						  <li><a href="season.html?i=4">第四季</a></li>
+						</ul>
+	  				</span>
+	  			</div>
+      		</li>
+			<li class="divider"></li>
+      		<li id="mc">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>主持人</div>
+      			<div class="collapsible-body">
+      				<span>
+      					<ul>
+						  <li>
+						  	<a href="mc.html?i=0&sheet=1FAIpQLSfNQwaT0ggrTYNI0D6Ed1Oo4TaxF02gAobzZUHziUeGjadvjw&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1FvKE87C2yTEpyZv43WXX67JVAJ-1qTK-uzuTt0W3Zg0">何炅</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=1&sheet=1FAIpQLSd-LjtIwlq27oxfhwSvSygSRaEpsGmLKw3O74xOEgICYXDiKQ&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1zjaOuCtrK9QSCXFfqm_6ZmSxWYoHSuNUhId83UlG804">撒貝寧</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=2&sheet=1FAIpQLSeiiJG3wCJh4trO54pJaaNPu-fzu75X21fE3_lOPUa5lrASFw&url=1UWYrMDxSIu6xSqQ6ZiebucFk42VAuaLKO86lTh7dhhM&url_s=1AVf1WU4QTltPref32HwMUO8FKnT61UmJzKVZxRh0pA8">白敬亭</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=3&sheet=1FAIpQLScQIcoI068ee_eveiNxXfW72MHy8i5pL0OBUoMwqBfF6kbMbQ&url=1cScAM2bVIuU8e7cFtXq-NvHomDSXGT0glwaXNZbGz18&url_s=14jcJNgSHekDvm1ykOPidy8qG08uL1rFhk0YnGoPBNaY">鬼鬼</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=4&sheet=1FAIpQLSdV2ZRlnJ1klkCjGMWfraWRhBhsm5-K36BT-G4fl1AZQRrT0A&url=1OFH3zOoDkNmXq0KGqWMNtXVgI_OE4HpHbX7E9IhgtZ4&url_s=1TA0aDRQ_NJWPq3BF9JSQpEVv8CWUX-C58vOuwVAzEHs">王鷗</a>
+						  </li>
+						</ul>
+      				</span>
+      			</div>
+      		</li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper blue lighten-3" id="logo">
+				<a class="brand-logo center">節目資訊</a>
+			  	<!--Menu-->
+			  	<ul id="nav-mobile" class="left">
+				  	<li>
+				  		<a data-target="sidenav_content" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+				  	</li>
+			  	</ul>
+				<!--Home-->
+			  	<ul id="nav-mobile" class="right">
+			  		<li>
+						<a href="info.html" class="show-on-large"><i class="material-icons">info</i></a>
+			  		</li>
+			  		<li>
+						<a href="home.html" class="show-on-large"><i class="material-icons">home</i></a>
+			  		</li>
+			  	</ul>
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="section" id="style">
+				<h3 class="center">節目形式</h3>
+				<p>每期節目有六位明星玩家，在每期設置的遊戲劇情中，一人扮演偵探，五人扮演角色，同為嫌疑人。</p>
+				<pre><p>&#9從第二季起，偵探也有獨立角色，和五位嫌疑人有著人物關係。偵探身份是隱藏在六張角色卡中，靠玩家隨機抽取。</p></pre>
+				<pre><p>&#9第二季第十案《瘋狂馬戲團》增設偵探助理，協助偵探推理案情。</p></pre>
+				<pre><p>&#9第四季開始，每期節目均有偵探助理協助偵探推理案情。</p></pre>
+				<p>五位嫌疑人中隱藏著一名真正的兇手，只有兇手可以說謊。玩家以投票方式指出兇手，偵探擁有兩次投票權，嫌疑人各一次投票權。只有成功檢舉兇手，玩家才能獲勝。</p>
+				<pre><p>&#9若六名玩家當中沒有偵探角色，即同為嫌疑人者，則所有玩家均各只有一次投票權。</p></pre>
+				<p>遊戲設置偵探酬金：</p>
+				<pre><p>&#9第一季玩家獲勝，則偵探獲得兩根金條，玩家各獲一根金條，兇手不獲發金條；兇手成功隱藏身份，則獲得全部六根金條。</p></pre>
+				<pre><p>&#9第二季起，玩家先行個別保管一根金條，玩家獲勝，則偵探獲得投對次數同等數量金條，投對的玩家各獲得一根金條，投錯的玩家及兇手須歸還金條；兇手成功隱藏身份，則獲得全部六根金條。</p></pre>
+				<p>第三季起增設實境案件，在實際搭建的建築物內進行搜證，以增加現場感。</p>
+				<p>形式亦會按案件發展稍有變動：</p>
+				<pre><p>&#9第一季第十二案《命運的巨輪》中，原為一人扮演偵探，但由於現場有其房間且內藏線索，偵探在第一輪搜證後列入嫌疑人之列，即六名玩家角色同為嫌疑人。</p></pre>
+				<pre><p>&#9第二季第六案《2046》中，由於有玩家中途發現極為關鍵的證物，故出現搜證期間兇手直接殺害玩家的情況。</p></pre>
+				<pre><p>&#9第二季第十二案《收官派對》中，從一開始六位明星玩家就被設定同為嫌疑人，且嫌疑人中分別藏著兩名兇手。</p></pre>
+				<pre><p>&#9第三季第五案《末日蜜蜂》中，有嫌疑人中途逃離現場。</p></pre>
+			</div>
+			<div class="divider"></div>
+			<div class="section" id="session">
+				<h3 class="center">節目環節</h3>
+				<p>不在場證明闡述。</p>
+				<p>第一輪現場搜證：</p>
+				<pre><p>&#9六名玩家分為兩組輪流取證，每組限時十分鐘，每人可拍攝十張照片。</p></pre>
+				<pre><p>&#9若為實景案件，因場地較大改為玩家分為三組同時取證。</p></pre>
+				<p>第一次集中推理：根據搜集到的線索完成推理。</p>
+				<p>偵探投票：</p>
+				<pre><p>&#9偵探擁有二次投票權，第一季中的偵探需在此環節當眾投出第一票，第二季起改為偵探隔著真相之門非公開投票。</p></pre>
+				<pre><p>&#9若案件中沒有偵探，則取消此環節。</p></pre>
+				<pre><p>&#9&#9第一季第十二案《命運的巨輪》中的大偵探在第一次集中推理後被列為嫌疑人，因此失去投票權。</p></pre>
+				<p>第二輪現場搜證：六名玩家集體進入現場搜證。</p>
+				<p>偵探一對一審問：偵探擁有單獨提審嫌疑人的權利，若案件沒有偵探，此環節改為嫌疑人間互相提問。</p>
+				<p>第二次集中推理：搜證後，六名玩家總結推理思路。</p>
+				<p>第三輪現場搜證：第一至三季，所有玩家都可進行此環節。第四季起，玩家可通過神秘小黑屋進行測試，通過測試者才能進行第三次現場搜證，其餘玩家則不獲此機會。</p>
+				<p>單獨投票：三分鐘單獨現場搜證後，玩家逐一進行最後的非公開投票。投票形式會依據案情設計與發展稍有變動：</p>
+				<pre><p>&#9第四季第二案《逃出無名島（下）》中，除第一輪兇手外，偵探與其餘玩家皆必須參與第二輪投票，投出幕後布局者。</p></pre>
+				<pre><p>&#9第四季第二案《神秘來電》中，所有玩家需投兩票指認2000年時空與2018年時空案件兇手。</p></pre>
+				<p>公布投票結果：得票最多的玩家被關入鐵籠（若得票最多的嫌疑人在故事劇情中死亡或逃逸，則不會有玩家被關入籠子）。</p>
+				<pre><p>&#9遇到平票時由沒選擇獲得平票的嫌疑人們的玩家決定最終結果。</p></pre>
+				<pre><p>&#9第三季第四案《NZND之歲月無情》中，出現三個嫌疑人同時平票的情況，且五個嫌疑人中只有一個嫌疑人完全解除嫌疑，故則交由偵探和該玩家一起決定最終進入鐵籠的嫌疑人。</p></pre>
+				<p>真相公開：公布真正的兇手，獲勝者領取酬金。</p>
+				<pre><p>&#9第一季若檢舉成功，偵探獲得兩根金條，兇手以外的其他玩家獲得一根金條；若檢舉失敗，兇手獲得全部六根金條。</p></pre></li>
+				<pre><p>&#9第二季起若檢舉成功，投票正確的玩家保留抽取角色卡時領取的金條，若偵探兩次投票均正確則額外獲得一根金條；若檢舉失敗，兇手獲得全部六根金條。</p></pre>
+			</div>
+			<div class="divider"></div>
+			<div class="section" id="broadcast">
+				<h3 class="center">播出時間</h3>
+				<a href="season.html?i=1"><h6 class="center">第一季</h6></a>
+				<p class="center">2016年03月27日－2016年06月23日</p>
+				<a href="season.html?i=2"><h6 class="center">第二季</h6></a>
+				<p class="center">2017年01月13日－2017年04月14日</p>
+				<a href="season.html?i=3"><h6 class="center">第三季</h6></a>
+				<p class="center">2017年11月03日－2018年01月26日</p>
+				<a href="season.html?i=4"><h6 class="center">第四季</h6></a>
+				<p class="center">2018年10月26日－2019年01月25日</p>
+			</div>
+			<div class="divider"></div>
+			<div class="section" id="long">
+				<h3 class="center">每集長度</h3>
+				<a href="season.html?i=1"><h6 class="center">第一季</h6></a>
+				<p class="center">約90分鐘</p>
+				<a href="season.html?i=2"><h6 class="center">第二季</h6></a>
+				<p class="center">約90至120分鐘</p>
+				<a href="season.html?i=3"><h6 class="center">第三季</h6></a>
+				<p class="center">約120至150分鐘</p>
+				<a href="season.html?i=4"><h6 class="center">第四季</h6></a>
+				<p class="center">約130至185分鐘</p>
+			</div>
+		</div>
+
+		<div class="fixed-action-btn">
+		  <button class="btn-floating btn-large blue" onclick="toTop()">
+		    <i class="large material-icons">vertical_align_top</i>
+		  </button>
+		  <ul>
+		    <li><a class="btn-floating red" href="#style"><i class="material-icons">looks_one</i></a></li>
+		    <li><a class="btn-floating yellow darken-1" href="#session"><i class="material-icons">looks_two</i></a></li>
+		    <li><a class="btn-floating green" href="#broadcast"><i class="material-icons">looks_3</i></a></li>
+		    <li><a class="btn-floating deep-purple" href="#long"><i class="material-icons">looks_4</i></a></li>
+		  </ul>
+		</div>
+
+		<footer class="page-footer blue darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">聯絡我們</h5>
+           		<div class="row">
+                  	<a href="https://www.facebook.com/pages/category/TV-Show/%E6%98%8E%E6%98%9F%E5%A4%A7%E4%BE%A6%E6%8E%A2-841912759286528/" class="white-text col s12 m6" target="blank"><i class="fa fa-facebook-square" style="font-size: 48px;"></i>  facebook</a>
+                  	<a class="white-text col s12 m6" href="https://www.weibo.com/u/5862147128?is_hot=1" target="blank"><i class="fa fa-weibo" style="font-size:48px; color: red;"></i>  weibo</a>
+                 </div>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">相關連結 <i class="fa fa-wikipedia-w" style="font-size: 24px;"></i></h5>
+                <ul>
+                  <li id="season_list"></li>
+                  <li>
+                  	<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/%E6%98%8E%E6%98%9F%E5%A4%A7%E5%81%B5%E6%8E%A2" target="blank">明星大偵探</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+	        <div class="container">
+	        © 2019 All rights reserved.
+	        </div>
+	      </div>
+        </footer>
+
+        <script type="text/javascript">
+        	$(document).ready(function(){
+				$('.sidenav').sidenav();
+				$('.collapsible').collapsible();
+				$('.fixed-action-btn').floatingActionButton();
+			});
+
+			function toTop() {
+				$('html, body').animate({
+					scrollTop: 0
+				}, 200);
+			}
+        </script>
+	</body>
+</html>

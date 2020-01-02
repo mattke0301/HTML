@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+		<title id="title"></title>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- 利用Tabletop.JS讀取Google Sheet https://github.com/jsoma/tabletop -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+		<script type='text/javascript'>
+			function GetUrlVar(VarName) 
+			{
+			  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			  var regexS = "[\\?&]" + VarName + "=([^&#]*)";
+			  var regex = new RegExp(regexS);
+			  var results = regex.exec(window.location.href);
+			  if (results == null)
+			   	 return "";
+			  else
+				 return results[1];
+			}
+			var s = decodeURIComponent(GetUrlVar('i'));
+			var now = s - 1;
+
+			var array = ["明星大偵探第一季節目列表", "明星大偵探第二季節目列表", "明星大偵探第三季節目列表", "明星大偵探第四季節目列表", "明星大偵探第五季節目列表"];
+			document.getElementById("title").innerHTML = array[s - 1];
+			
+			var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU/pubhtml';
+
+			function init() {
+				Tabletop.init( { key: publicSpreadsheetUrl,//
+							 callback: showInfo,
+							 simpleSheet: true } )
+			}
+
+			function showInfo(data, tabletop) {
+				console.log(data);
+				var str = "";
+				var index = 0;
+				console.log("s=" + s);
+				for (var i = 0; i < data.length; i += 12) {
+					if(data[i].Season == s) {
+						index = i;
+						break;
+					}
+				}
+				console.log("index=" + index);
+				for (var i = index, t = 0; i < data.length && t < 12; i++, t++) {
+					str += 	'	<div class="col s12 m4 l3">' +
+							'      <div class="card">' +
+							'        <div class="card-image">' +
+							'          <img src="' + data[i].img + '">' +
+							'        </div>' +
+							'        <div class="card-content">' +
+							'          <div class="card-title">' + data[i].Name + '</div>' +
+							'			<p>播出時間：' + data[i].Time + '</p>' +
+							'			<pre><p>案件死者<br>&#9' + data[i].Victim + '</p></pre>' +
+							'        	<p>來賓<br>';
+					var arr_guest = data[i].Guest.split("、");
+					console.log(arr_guest);
+					for (var j = 0; j < arr_guest.length; j++) {
+						if (j != 0)		str+= '、';
+						str += '<a href="https://zh.wikipedia.org/wiki/' + arr_guest[j] + '" target="blank">' + arr_guest[j] + '</a>';
+					}
+							
+					str +=	'			</p>' +
+							'        </div>' +
+							'        <div class="card-action">';
+							
+					var arr_video = data[i].Video.split("、");
+					console.log(arr_video);
+					for (var j = 0; j < arr_video.length; j++) {
+						var num = j + 1;
+						if (arr_video.length == 1){
+							if (arr_video[j] == "無")	str += '<a href="#!">無影片</a>';
+							else	str +=  '<a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+											'target="blank">完整版</a>';
+							break;
+						}
+						else if (arr_video[j] == "無")	break;
+						str += 	'          <a href="https://www.youtube.com/watch?v='+ arr_video[j] + '&t=' + data[i].Video_time + 's" ' +
+								'target="blank">part' + num + '</a>';
+					}
+					if (data[i].Crime == "無")	str += '<a href="#!" class="right">無案件還原</a>';
+					else {
+						str += 	'			<a href="https://www.youtube.com/watch?v='+ data[i].Crime + '&t=' + data[i].Crime_time + 's" ' +
+								'class="right" target="blank">案件還原</a>';
+					}
+					str +=	'        </div>' +
+							'      </div>' +
+							'    </div>';
+				}
+				document.getElementById("info").innerHTML += str;
+			}
+
+			window.addEventListener('DOMContentLoaded', init);
+
+			function change(x) {
+				now = (4 + now + x) % 4 + 1;
+				window.location.href = "season.html?i=" + now;
+			}
+
+
+		</script>
+	<head>
+
+	<body class="light-blue lighten-4">
+		<ul id="sidenav_content" class="sidenav collapsible">
+			<li>
+				<div class="user-view">
+			      	<div class="background">
+			        	<img src="https://upload.cc/i1/2020/01/03/y5f3wn.jpg">
+			      	</div>
+			      	<img class="circle" src="https://upload.cc/i1/2020/01/03/6dADVq.jpg">
+      				<span class="black-text name"><b>明星大偵探</b></span>
+			  	</div>
+			</li>
+			<li>
+				<a href="home.html"><i class="material-icons">home</i>首頁</a>
+			</li>
+			<li>
+				<a href="info.html"><i class="material-icons">info</i>節目資訊</a>
+			</li>
+      		<li id="NZND">
+      			<a href="nznd.html"><i class="material-icons">star</i>NZND專區</a>
+      		</li>
+      		<li class="divider"></li>
+			<li id="season">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>季數</div>
+	  			<div class="collapsible-body">
+	  				<span>
+	  					<ul>
+						  <li><a href="season.html?i=1">第一季</a></li>
+						  <li><a href="season.html?i=2">第二季</a></li>
+						  <li><a href="season.html?i=3">第三季</a></li>
+						  <li><a href="season.html?i=4">第四季</a></li>
+						</ul>
+	  				</span>
+	  			</div>
+      		</li>
+			<li class="divider"></li>
+      		<li id="mc">
+				<div class="collapsible-header"><i class="material-icons">arrow_drop_down</i>主持人</div>
+      			<div class="collapsible-body">
+      				<span>
+      					<ul>
+						  <li>
+						  	<a href="mc.html?i=0&sheet=1FAIpQLSfNQwaT0ggrTYNI0D6Ed1Oo4TaxF02gAobzZUHziUeGjadvjw&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1FvKE87C2yTEpyZv43WXX67JVAJ-1qTK-uzuTt0W3Zg0">何炅</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=1&sheet=1FAIpQLSd-LjtIwlq27oxfhwSvSygSRaEpsGmLKw3O74xOEgICYXDiKQ&url=1pyIbzwHCCaIoauGB5uYAA0x-tPYYUKVBFtIWadbo7NU&url_s=1zjaOuCtrK9QSCXFfqm_6ZmSxWYoHSuNUhId83UlG804">撒貝寧</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=2&sheet=1FAIpQLSeiiJG3wCJh4trO54pJaaNPu-fzu75X21fE3_lOPUa5lrASFw&url=1UWYrMDxSIu6xSqQ6ZiebucFk42VAuaLKO86lTh7dhhM&url_s=1AVf1WU4QTltPref32HwMUO8FKnT61UmJzKVZxRh0pA8">白敬亭</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=3&sheet=1FAIpQLScQIcoI068ee_eveiNxXfW72MHy8i5pL0OBUoMwqBfF6kbMbQ&url=1cScAM2bVIuU8e7cFtXq-NvHomDSXGT0glwaXNZbGz18&url_s=14jcJNgSHekDvm1ykOPidy8qG08uL1rFhk0YnGoPBNaY">鬼鬼</a>
+						  </li>
+						  <li>
+						  	<a href="mc.html?i=4&sheet=1FAIpQLSdV2ZRlnJ1klkCjGMWfraWRhBhsm5-K36BT-G4fl1AZQRrT0A&url=1OFH3zOoDkNmXq0KGqWMNtXVgI_OE4HpHbX7E9IhgtZ4&url_s=1TA0aDRQ_NJWPq3BF9JSQpEVv8CWUX-C58vOuwVAzEHs">王鷗</a>
+						  </li>
+						</ul>
+      				</span>
+      			</div>
+      		</li>
+		</ul>
+
+		<nav>
+			<div class="nav-wrapper blue lighten-3">
+			  	<!--Menu-->
+			  	<ul id="nav-mobile" class="left">
+				  	<li>
+				  		<a data-target="sidenav_content" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+				  	</li>
+				  	<li>
+			  			<a href="javascript:change(-1)"><i class="material-icons">arrow_back</i></a>
+			  		</li>
+			  	</ul>
+				<!--Home-->
+			  	<ul id="nav-mobile" class="right">
+			  		<li>
+			  			<a href="javascript:change(1)"><i class="material-icons">arrow_forward</i></a>
+			  		</li>
+			  		<li>
+						<a href="info.html" class="show-on-large"><i class="material-icons">info</i></a>
+			  		</li>
+			  		<li>
+						<a href="home.html" class="show-on-large"><i class="material-icons">home</i></a>
+			  		</li>
+			  	</ul>
+			  	<a class="brand-logo center" id="logo"></a>
+			</div>
+		</nav>
+
+		<div class="row" id="info"></div>
+		
+		<footer class="page-footer blue darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">聯絡我們</h5>
+           		<div class="row">
+                  	<a href="https://www.facebook.com/pages/category/TV-Show/%E6%98%8E%E6%98%9F%E5%A4%A7%E4%BE%A6%E6%8E%A2-841912759286528/" class="white-text col s12 m6" target="blank"><i class="fa fa-facebook-square" style="font-size: 48px;"></i>  facebook</a>
+                  	<a class="white-text col s12 m6" href="https://www.weibo.com/u/5862147128?is_hot=1" target="blank"><i class="fa fa-weibo" style="font-size:48px; color: red;"></i>  weibo</a>
+                 </div>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">相關連結 <i class="fa fa-wikipedia-w" style="font-size: 24px;"></i></h5>
+                <ul>
+                  <li id="season_list"></li>
+                  <li>
+                  	<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/%E6%98%8E%E6%98%9F%E5%A4%A7%E5%81%B5%E6%8E%A2" target="blank">明星大偵探</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+	        <div class="container">
+	        © 2019 All rights reserved.
+	        </div>
+	      </div>
+        </footer>
+
+        <script type="text/javascript">
+        	$(document).ready(function(){
+				$('.sidenav').sidenav();
+				$('.collapsible').collapsible()
+				$('.carousel.carousel-slider').carousel({
+				    indicators: true
+				});
+			});
+			document.getElementById("logo").innerHTML +=  array[s - 1];
+    		document.getElementById("season_list").innerHTML = '<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/' + array[s - 1] + '" target="blank">' + array[s - 1] + '</a>';
+        </script>
+	</body>
+</html>
