@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--Import Google Icon Font-->
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!--Import materialize.css
+		<link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>-->
+		<link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+		<title>明星大偵探</title>
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="js/materialize.min.js"></script>
+		<!-- 利用Tabletop.JS讀取Google Sheet https://github.com/jsoma/tabletop -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+		<!--Import Google Map-->
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAUQFOHSuXc_KpOGsit2sMOBa_k53rAPBA"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		
+		<script type="text/javascript">
+
+			var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1RTlDqIR6N7CnrFr5VzQp9dVn2gaMKxd4VSfvdABKtRE/pubhtml';
+			var map;
+			var season = [], mc = [], marker = [], infowindow = [];
+			
+
+			function init() {
+				Tabletop.init( { key: publicSpreadsheetUrl,
+							 callback: showMC,
+							 simpleSheet: true } );
+			}
+
+			function showMC(data, tabletop) {
+				console.log(data);
+				for (var i = 0; i < data.length; i++)	mc[i] = data[i];
+				myMap();
+			}
+
+			function myMap() {
+				var center = { lat: 33.456047, lng: 115.611950};
+
+				map = new google.maps.Map(document.getElementById("map"), {
+					center: center,
+					zoom: 5
+				});
+
+				for (var i = 0; i < mc.length; i++) {
+					var position = { lat: parseFloat(mc[i].lat), lng: parseFloat(mc[i].lng)}
+					//var addr = "./images/" + mc[i].Name + "頭像.jpg";
+					
+					marker[i] = new google.maps.Marker({
+						id: i,
+						position: position,
+						map: map,
+						icon: mc[i].img
+					});
+
+					infowindow[i] = new google.maps.InfoWindow({
+					  content:'<h6 class="center">我是' + mc[i].Name + '</h6>' +
+					  		  '<p>我來自' + mc[i].From + '出生於' + mc[i].Birth + '</p>'
+					  		  
+					});
+					console.log(marker[i].getPosition());
+					marker[i].addListener('mouseover', function() {
+						infowindow[this.id].open(map, marker[this.id]);
+					});
+					marker[i].addListener('mouseout', function() {
+						infowindow[this.id].close();
+					});
+					marker[i].addListener('click', function() {
+						map.setZoom(15);
+						map.setCenter(marker[this.id].getPosition());
+						document.getElementById("info").innerHTML = '<h1>' + mc[this.id].Name + '</h1><h4>生日：'+ mc[this.id].Birth +'</h4>' + mc[this.id].content + '<h4><a href="mc.html?i=' + this.id + '&sheet=' + mc[this.id].sheet + '&url=' + mc[this.id].url + '&url_s=' + mc[this.id].url_s + '">進入頁面</a></h4>';
+					});
+					marker[i].addListener('dblclick', function() {
+						window.location.href = "mc.html?i=" + this.id + "&sheet=" + mc[this.id].sheet + "&url=" + mc[this.id].url + "&url_s=" + mc[this.id].url_s;
+					});
+				}
+			}
+
+			function refresh() {
+				var center = { lat: 33.456047, lng: 115.611950};
+				map.setZoom(5);
+				map.setCenter(center);
+				document.getElementById("info").innerHTML = "";
+			}
+
+			window.addEventListener('DOMContentLoaded', init);
+		</script>
+
+		<style type="text/css">
+			.image {
+			  position: relative;
+			  width: 100%;
+			}
+
+			.img {
+			  opacity: 1;
+			  display: block;
+			  transition: .5s ease;
+			  backface-visibility: hidden;
+			}
+
+			.text {
+			  transition: .5s ease;
+			  opacity: 0;
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			  transform: translate(-50%, -50%);
+			  -ms-transform: translate(-50%, -50%);
+			  text-align: center;
+			}
+
+			.image:hover .img {
+			  opacity: 0.3;
+			}
+
+			.image:hover .text {
+			  opacity: 1;
+			}
+
+			.inner {
+			  color: #000066;
+			  font-size: 50px;
+			  text-align: center;
+			}
+		</style>
+	</head>
+	
+
+	<body class="light-blue lighten-4">
+		<nav class="nav-extended blue lighten-3">
+			<div class="nav-wrapper">
+			  	<a class="brand-logo center">明星大偵探</a>
+			  	<ul id="nav-mobile" class="left">
+			  		<li>
+						<a href="home.html" class="show-on-large"><i class="material-icons">home</i></a>
+			  		</li>
+			  	</ul>
+			  	<ul id="nav-mobile" class="right">
+			  		<li>
+						<a href="info.html" class="show-on-large"><i class="material-icons">info</i></a>
+			  		</li>
+			  	</ul>
+			</div>
+			<div class="nav-content row">
+					<ul class="tabs tabs-transparent">
+				        <li class="tab col s6">
+				        	<a href="#season" class="active">節目表</a>
+				        </li>
+				        <li class="tab col s6">
+				        	<a href="#mc">主持人</a>
+				        </li>
+				    </ul>
+			</div>
+		</nav>
+		
+		<!--Tab-->
+		<div class="hover">
+			<div class="row" id="season">
+				<div class="row center">
+					<div class="col s12 m6 image">
+						<a href="season.html?i=1"><img src="https://upload.cc/i1/2020/01/03/2t8G1b.jpg" class="img" width="100%"></a>
+						<div class="text">
+							<div class="inner">
+								第一季<br>Season 1
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m6 image">
+						<a href="season.html?i=1"><img src="https://upload.cc/i1/2020/01/03/kCGHfo.jpg" class="img" width="100%"></a>
+						<div class="text">
+							<div class="inner">
+								第二季<br>Season 2
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m6 image">
+						<a href="season.html?i=1"><img src="https://upload.cc/i1/2020/01/03/y4JU5t.jpg" class="img" width="100%"></a>
+						<div class="text">
+							<div class="inner">
+								第三季<br>Season 3
+							</div>
+						</div>
+					</div>
+					<div class="col s12 m6 image">
+						<a href="season.html?i=1"><img src="https://upload.cc/i1/2020/01/03/ZNr0KD.jpg" class="img" width="100%"></a>
+						<div class="text">
+							<div class="inner">
+								第四季<br>Season 4
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row" id="mc">
+			<div id="map" class="col s4" style="height: 650px;"></div>
+			<div id="info" class="center"></div>
+			<div class="fixed-action-btn">
+			  	<button class="btn-floating btn-large blue" onclick="refresh()">
+			    	<i class="large material-icons">refresh</i>
+			  	</button>
+			</div>
+		</div>
+
+		<footer class="page-footer blue darken-3">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">聯絡我們</h5>
+           		<div class="row">
+                  	<a href="https://www.facebook.com/pages/category/TV-Show/%E6%98%8E%E6%98%9F%E5%A4%A7%E4%BE%A6%E6%8E%A2-841912759286528/" class="white-text col s12 m6" target="blank"><i class="fa fa-facebook-square" style="font-size: 48px;"></i>  facebook</a>
+                  	<a class="white-text col s12 m6" href="https://www.weibo.com/u/5862147128?is_hot=1" target="blank"><i class="fa fa-weibo" style="font-size:48px; color: red;"></i>  weibo</a>
+                 </div>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">相關連結 <i class="fa fa-wikipedia-w" style="font-size: 24px;"></i></h5>
+                <ul>
+                  <li id="season_list"></li>
+                  <li>
+                  	<a class="grey-text text-lighten-3" href="https://zh.wikipedia.org/wiki/%E6%98%8E%E6%98%9F%E5%A4%A7%E5%81%B5%E6%8E%A2" target="blank">明星大偵探</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+	        <div class="container">
+	        © 2019 All rights reserved.
+	        </div>
+	      </div>
+        </footer>
+
+        <script type="text/javascript">
+			$(document).ready(function(){
+			    $('.tabs').tabs();
+			});
+
+        </script>
+	</body>
+</html>
+        
